@@ -5,7 +5,7 @@ import pytest
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from app import db
-from app.models import User, Post
+from app.models import User, Post, Message
 
 
 def login(client, username, password):
@@ -108,3 +108,40 @@ def test_explore_page(client, user_ola, post_ola):
     assert response.status_code == 200
 
     assert b'Post Oli' in response.data
+
+
+
+def test_send_message_success(client, app, user_ola, user_kasia):
+    """Sprawdza czy dziala wysylanie wiadomosci"""
+    login(client, 'ola', 'ola123')
+
+    text = 'bla bla bla wiadomosc do Kasi'
+    response = client.post(f'/send_message/{user_kasia.username}', data={
+        'message': text
+    }, follow_redirects=True)
+
+    assert response.status_code == 200
+    assert b'Your message has been sent.' in response.data
+
+    with app.app_context():
+        text = db.session.scalar(db.select(Message).where(Message.body == text))
+        assert text is not None
+        assert text.author == user_ola
+        assert text.recipient == user_kasia
+
+
+def test_messages_delivered(client, app, user_ola, user_kasia):
+    """Sprawdza, czy wiadomosc jest dostarczona"""
+    with app.app_context():
+        ola = db.session.get(User, user_ola.id)
+        kasia = db.session.get(User, user_kasia.id)
+
+        message = Message(author=kasia, recipient=ola, body="Wiadomosc do Oli od Kasi")
+        db.session.add(message)
+        db.session.commit()
+
+    login(client, 'ola', 'ola123')
+    response = client.get('/messages')
+
+    assert response.status_code == 200
+    assert b'Wiadomosc do Oli od Kasi' in response.data
