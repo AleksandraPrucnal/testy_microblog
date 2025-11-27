@@ -8,7 +8,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 
 from app import create_app, db
-from app.models import User, Post
+from app.models import User
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
@@ -184,4 +184,5 @@ def test_register_invalid_email_format(driver, db_setup):
 
 
 if __name__ == "__main__":
+
     sys.exit(pytest.main(["-v", __file__]))
