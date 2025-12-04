@@ -48,7 +48,7 @@ def db_setup():
 @pytest.fixture(scope="function")
 def driver():
     """Uruchamia i konfiguruje przegladarke, po zakonczeniu testu zamyka okno"""
-    browser_driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    browser_driver = webdriver.Chrome(service=Service(executable_path='./chromedriver.exe'))
     browser_driver.implicitly_wait(10)
 
     yield browser_driver
@@ -181,7 +181,3 @@ def test_register_invalid_email_format(driver, db_setup):
 
     message = driver.find_element(By.XPATH, "//*[contains(text(), 'Invalid email address')]")
     assert message.is_displayed()
-
-
-if __name__ == "__main__":
-    sys.exit(pytest.main(["-v", __file__]))

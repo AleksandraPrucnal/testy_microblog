@@ -10,6 +10,7 @@ from selenium.webdriver.common.by import By
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
+# ----------------------------
 
 from app import create_app, db
 from app.models import User, Post
@@ -52,7 +53,7 @@ def db_setup():
 @pytest.fixture(scope="function")
 def driver():
     """Uruchamia i konfiguruje przegladarke, po zakonczeniu testu zamyka okno"""
-    browser_driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    browser_driver = webdriver.Chrome(service=Service(executable_path='./chromedriver.exe'),)
     browser_driver.implicitly_wait(10)
 
     yield browser_driver
@@ -109,5 +110,4 @@ def test_login_empty_fields(driver, db_setup):
     time.sleep(1)
 
     assert "/index" not in driver.current_url
-
     assert "/auth/login" in driver.current_url

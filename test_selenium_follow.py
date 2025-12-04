@@ -88,12 +88,13 @@ def driver():
     chrome_options.add_argument("--incognito")
 
     browser_driver = webdriver.Chrome(
-        service=Service(ChromeDriverManager().install()),
+        service=Service(executable_path='./chromedriver.exe'),
         options=chrome_options
     )
 
     browser_driver.implicitly_wait(10)
     yield browser_driver
+
     browser_driver.quit()
 
 

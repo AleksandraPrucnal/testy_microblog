@@ -53,7 +53,7 @@ def db_setup():
 @pytest.fixture(scope="function")
 def driver():
     """Uruchamia i konfiguruje przegladarke"""
-    browser_driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    browser_driver = webdriver.Chrome(service=Service(executable_path='./chromedriver.exe'),)
     browser_driver.implicitly_wait(10)
 
     yield browser_driver

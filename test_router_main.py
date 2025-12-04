@@ -84,7 +84,7 @@ def test_follow(client, app, user_ola, user_kasia):
 
 
 def test_unfollow(client, app, user_ola, user_kasia):
-    """Sprawdzamy czy dziala funkcja follow"""
+    """Sprawdzamy czy dziala funkcja unfollow"""
     user_ola.follow(user_kasia)
     db.session.commit()
 
